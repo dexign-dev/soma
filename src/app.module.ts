@@ -8,8 +8,8 @@ import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
 import { PrismaExceptionFilter } from './util/prisma-exception.filter';
 import { TransformResponseInterceptor } from './util/transform-response.interceptor';
 import { AuthModule } from './auth/auth.module';
-import { NoticeModule } from './notice/notice.module';
 import { PrismaClient } from '@prisma/client';
+import { PostModule } from './post/post.module';
 @Global()
 @Module({
   imports: [
@@ -35,7 +35,7 @@ import { PrismaClient } from '@prisma/client';
     }),
     UserModule,
     AuthModule,
-    NoticeModule,
+    PostModule,
   ],
   controllers: [AppController],
   providers: [
