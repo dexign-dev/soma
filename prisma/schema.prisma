@@ -1,0 +1,59 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String          @id @default(uuid()) @db.Uuid
+  email         String          @unique
+  password      String?
+  name          String
+  createdAt     DateTime        @default(now()) @db.Timestamptz(6)
+  updatedAt     DateTime        @updatedAt @db.Timestamptz(6)
+  deletedAt     DateTime?
+  refreshToken  RefreshToken?
+  NoticeComment NoticeComment[]
+}
+
+model RefreshToken {
+  id        String   @id @default(uuid()) @db.Uuid
+  token     String   @unique
+  userId    String   @unique @db.Uuid
+  user      User     @relation(fields: [userId], references: [id])
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Image {
+  id        String    @id @default(uuid()) @db.Uuid
+  url       String
+  filename  String    @unique @db.VarChar(1000)
+  size      Int?
+  mimeType  String?
+  deletedAt DateTime?
+}
+
+model Notice {
+  id        String          @id @default(uuid()) @db.Uuid
+  title     String
+  content   String
+  createdAt DateTime        @default(now())
+  updatedAt DateTime        @updatedAt
+  comments  NoticeComment[]
+}
+
+model NoticeComment {
+  id        String   @id @default(uuid()) @db.Uuid
+  content   String
+  userId    String   @db.Uuid
+  user      User     @relation(fields: [userId], references: [id])
+  noticeId  String   @db.Uuid
+  notice    Notice   @relation(fields: [noticeId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
